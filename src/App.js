@@ -30,7 +30,7 @@ const App = () => {
   };
   
   return (
-    <div className="App">
+    <div className="app">
         <Form getFlightData={getFlightData} onClear={onClear} />
         <Table flightData={flightData}/>
     </div>
