@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import Form from "./components/Form";
 import Table from "./components/Table";
-import './App.css';
 import { findCountry } from "./helpers/findCountry";
+import './App.css';
 
 const lang = "en-US";
 const marketCountry = "UA";
@@ -12,7 +12,6 @@ const getCountryUrl = (currency) =>
 
 const App = () => {
     const [flightData, setFlightData] = useState({});
-    const onClear = () => setFlightData([]);
 
     const findCountryFrom = async (from, currency) => {
         if (!from || !currency) {
@@ -50,15 +49,13 @@ const App = () => {
                 "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
                 "useQueryString": true
             },
-        }).then(data => data.json()).then(data => {   
-            console.log(data);         
-            setFlightData({...data, Places: { from: fromCountry.PlaceId, to: toCountry.PlaceId }});
-        })
+        }).then(data => data.json()).then(data =>
+            setFlightData({...data, Places: { from: fromCountry.PlaceId, to: toCountry.PlaceId }}));
     };
 
     return (
         <div className="app">
-            <Form getFlightData={getFlightData} onClear={onClear} />
+            <Form getFlightData={getFlightData} />
             <Table flightData={flightData}/>
         </div>
     );

@@ -20,45 +20,22 @@ const Row = styled.div`
     margin-bottom: 20px;
 
     & > *.MuiFormControl-root {
-        min-width: 50%;
+        min-width: 45%;
     }
 `;
 
 const Actions = styled.div`
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-bottom: 20px;
 `;
 
-const InputsHolder = styled.div`
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-
-    & > *:not(:first-child) {
-        margin-left: 10px;
-    }
-
-    & > * {
-        flex: 0 1 33%;
-    }
-`;
-
-export const Form = ({ getFlightData, onClear }) => {
+export const Form = ({ getFlightData }) => {
     const [departureDate, setDepartureDate] = useState(convertDate(new Date("Thu Jul 11 2021 22:11:18 GMT+0200")));
-    const [from, setFrom] = useState("london");
-    const [to, setTo] = useState("krakow");
+    const [from, setFrom] = useState("");
+    const [to, setTo] = useState("");
     const [currency, setCurrency] = useState("EUR");
-
-    const onSubmit = () =>
-        getFlightData({
-            departureDate,
-            from,
-            to,
-            currency
-        });
-
-    
+    const onSubmit = () => getFlightData({ departureDate, from, to, currency });
 
     return <>
         <StyledForm onSubmit={e => e.preventDefault()}>
@@ -69,14 +46,6 @@ export const Form = ({ getFlightData, onClear }) => {
                     defaultValue={departureDate}
                     onChange={(date) => setDepartureDate(date.target.value)}
                 />
-            </Row>
-            <Row>
-                <TextField placeholder="London" label="From" value={from} onChange={(e) => setFrom(e.target.value)} />
-            </Row>
-            <Row>
-                <TextField placeholder="Paris" label="To" value={to} onChange={(e) => setTo(e.target.value)} />
-            </Row>
-            <InputsHolder>
                 <FormControl>
                     <InputLabel shrink>
                         Currency
@@ -91,14 +60,15 @@ export const Form = ({ getFlightData, onClear }) => {
                         <MenuItem value="RUB">RUB</MenuItem>
                     </Select>
                 </FormControl>
-            </InputsHolder>
+            </Row>
+            <Row>
+                <TextField label="From" value={from} onChange={(e) => setFrom(e.target.value)} />
+                <TextField label="To" value={to} onChange={(e) => setTo(e.target.value)} />
+            </Row>
         </StyledForm>
         <Actions>
-            <Button onClick={onClear} variant="contained" color="secondary">
-                Clear
-            </Button>
             <Button onClick={onSubmit} variant="contained" color="primary">
-                Get data
+                Find
             </Button>
         </Actions>
     </>
