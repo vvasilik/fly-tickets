@@ -17,7 +17,7 @@ const Row = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 
     & > *.MuiFormControl-root {
         min-width: 45%;
@@ -27,11 +27,11 @@ const Row = styled.div`
 const Actions = styled.div`
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 `;
 
 export const Form = ({ getFlightData }) => {
-    const [departureDate, setDepartureDate] = useState(convertDate(new Date("Thu Jul 11 2021 22:11:18 GMT+0200")));
+    const [departureDate, setDepartureDate] = useState(convertDate(new Date()));
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
     const [currency, setCurrency] = useState("EUR");
@@ -39,6 +39,10 @@ export const Form = ({ getFlightData }) => {
 
     return <>
         <StyledForm onSubmit={e => e.preventDefault()}>
+            <Row>
+                <TextField label="From" value={from} onChange={(e) => setFrom(e.target.value)} />
+                <TextField label="To" value={to} onChange={(e) => setTo(e.target.value)} />
+            </Row>
             <Row>
                 <TextField
                     type="date"
@@ -60,10 +64,6 @@ export const Form = ({ getFlightData }) => {
                         <MenuItem value="RUB">RUB</MenuItem>
                     </Select>
                 </FormControl>
-            </Row>
-            <Row>
-                <TextField label="From" value={from} onChange={(e) => setFrom(e.target.value)} />
-                <TextField label="To" value={to} onChange={(e) => setTo(e.target.value)} />
             </Row>
         </StyledForm>
         <Actions>
