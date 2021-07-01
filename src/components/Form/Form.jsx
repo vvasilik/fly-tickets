@@ -20,7 +20,7 @@ const Row = styled.div`
     margin-bottom: 50px;
 
     & > *.MuiFormControl-root {
-        min-width: 45%;
+        min-width: 47%;
     }
 `;
 
@@ -34,7 +34,7 @@ export const Form = ({ getFlightData }) => {
     const [departureDate, setDepartureDate] = useState(convertDate(new Date()));
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
-    const [currency, setCurrency] = useState("EUR");
+    const [currency, setCurrency] = useState("PLN");
     const onSubmit = () => getFlightData({ departureDate, from, to, currency });
 
     return <>
@@ -58,10 +58,10 @@ export const Form = ({ getFlightData }) => {
                         value={currency}
                         onChange={(e) => setCurrency(e.target.value)}
                     >
+                        <MenuItem value="PLN">PLN</MenuItem>
                         <MenuItem value="EUR">EUR</MenuItem>
                         <MenuItem value="USD">USD</MenuItem>
                         <MenuItem value="UAH">UAH</MenuItem>
-                        <MenuItem value="RUB">RUB</MenuItem>
                     </Select>
                 </FormControl>
             </Row>
