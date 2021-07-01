@@ -19,6 +19,10 @@ const Row = styled.div`
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 20px;
+
+    & > *.MuiFormControl-root {
+        min-width: 50%;
+    }
 `;
 
 const Actions = styled.div`
@@ -49,7 +53,7 @@ const StyledDL = styled.dl`
 `;
 
 const StyledDT = styled.dt`
-    margin: 0 0 5px;
+    margin: 0 0 7px;
     font-size: 13px;
     color: #0000008a;
 `;
