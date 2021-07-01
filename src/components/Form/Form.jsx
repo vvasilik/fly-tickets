@@ -60,9 +60,9 @@ const StyledDD = styled.dd`
 
 export const Form = ({ getFlightData, onClear }) => {
     const [departureDate, setDepartureDate] = useState(convertDate(new Date()));
-    const [from, setFrom] = useState("london");
+    const [from, setFrom] = useState("");
     const [fromPlaces, setFromPlaces] = useState([]);
-    const [to, setTo] = useState("paris");
+    const [to, setTo] = useState("");
     const [toPlaces, setToPlaces] = useState([]);
     const [country, setCountry] = useState("UA");
     const [currency, setCurrency] = useState("EUR");
