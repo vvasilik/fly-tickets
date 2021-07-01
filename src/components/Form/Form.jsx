@@ -1,30 +1,61 @@
 import { useState } from "react";
 import styled from "styled-components";
 import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import { convertDate } from "../../helpers/convertDate";
 import { findCountry } from "./helpers";
+
+const StyledForm = styled.form`
+    display: flex;
+    flex-direction: column;
+`;
 
 const Row = styled.div`
     display: flex;
     justify-content: space-between;
-`;
-
-const AirportsList = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-`;
-
-const StyledSpanNoWrap = styled.span`
-    white-space: nowrap;
-    margin-right: 10px;
+    align-items: flex-start;
+    margin-bottom: 20px;
 `;
 
 const Actions = styled.div`
     display: flex;
     justify-content: space-between;
+    margin-bottom: 20px;
+`;
+
+const InputsHolder = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    & > *:not(:first-child) {
+        margin-left: 10px;
+    }
+
+    & > * {
+        flex: 0 1 33%;
+    }
+`;
+
+const StyledDL = styled.dl`
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    text-align: right;
+`;
+
+const StyledDT = styled.dt`
+    margin: 0 0 5px;
+    font-size: 13px;
+    color: #0000008a;
+`;
+
+const StyledDD = styled.dd`
+    margin: 0;
 `;
 
 export const Form = ({ getFlightData, onClear }) => {
@@ -33,20 +64,20 @@ export const Form = ({ getFlightData, onClear }) => {
     const [fromPlaces, setFromPlaces] = useState([]);
     const [to, setTo] = useState("paris");
     const [toPlaces, setToPlaces] = useState([]);
-    const [country, setCountry] = useState("PL");
-    const [currency, setCurrency] = useState("PLN");
+    const [country, setCountry] = useState("UA");
+    const [currency, setCurrency] = useState("EUR");
     const [lang, setLang] = useState("en-US");
+    const getUrl = () => `https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/${country}/${currency}/${lang}/?query=`;
+
     const onSubmit = () =>
         getFlightData({
             departureDate,
-            from: fromPlaces.filter(({ isChecked }) => isChecked),
-            to: toPlaces.filter(({ isChecked }) => isChecked),
+            from: fromPlaces?.[0] || [],
+            to: toPlaces?.[0] || [],
             country,
             currency,
             lang
         });
-
-    const getUrl = () => `https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/${country}/${currency}/${lang}/?query=`;
 
     const findCountryFrom = async () => {
         if (!from) {
@@ -68,16 +99,8 @@ export const Form = ({ getFlightData, onClear }) => {
         setToPlaces(storedResults);
     }
 
-    const setCheckedFrom = (status, id) => {
-        setFromPlaces(fromPlaces.map((item) => item.PlaceId === id ? {...item, isChecked: status} : item));
-    };
-
-    const setCheckedTo = (status, id) => {
-        setToPlaces(toPlaces.map((item) => item.PlaceId === id ? {...item, isChecked: status} : item));
-    };
-
-    return <form onSubmit={e => e.preventDefault()}>
-        <div>
+    return <>
+        <StyledForm onSubmit={e => e.preventDefault()}>
             <Row>
                 <TextField
                     type="date"
@@ -89,59 +112,40 @@ export const Form = ({ getFlightData, onClear }) => {
             <Row>
                 <TextField placeholder="London" label="From" value={from} onBlur={findCountryFrom} onChange={(e) => setFrom(e.target.value)} />
                 {
-                    fromPlaces.length === 0
-                        ? "-- no airports found --"
-                        : <AirportsList>
-                            {
-                                fromPlaces.map((item, index) => <StyledSpanNoWrap key={item.PlaceId}>
-                                    <Checkbox
-                                        edge="start"
-                                        onChange={(e) => setCheckedFrom(e.target.checked, item.PlaceId)}
-                                        id={item.PlaceName + item.CountryName}
-                                    />
-                                    <label htmlFor={item.PlaceName + item.CountryName}>
-                                        {
-                                            index === 0 && fromPlaces.length > 1
-                                                ? <strong>{`All airports for: ${item.PlaceName} (${item.CountryName})`}</strong>
-                                                : `${item.PlaceName} (${item.CountryName})`
-                                        }
-                                    </label>
-                                </StyledSpanNoWrap>)
-                            }
-                        </AirportsList>
+                    fromPlaces.length !== 0 && <StyledDL>
+                        <StyledDT>All airports for:</StyledDT>
+                        <StyledDD>{fromPlaces[0].PlaceName} ({fromPlaces[0].CountryName})</StyledDD>
+                    </StyledDL>
                 }
             </Row>
             <Row>
                 <TextField placeholder="Paris" label="To" value={to} onBlur={findCountryTo} onChange={(e) => setTo(e.target.value)} />
                 {
-                    toPlaces.length === 0
-                        ? "-- no airports found --"
-                        : <div>
-                            {
-                                toPlaces.map((item, index) => <StyledSpanNoWrap key={item.PlaceId}>
-                                    <input onChange={(e) => setCheckedTo(e.target.checked, item.PlaceId)} id={item.PlaceName + item.CountryName} type="checkbox"/>
-                                    <label htmlFor={item.PlaceName + item.CountryName}>
-                                        {
-                                            index === 0 && toPlaces.length > 1
-                                                ? <strong>{`All airports for: ${item.PlaceName} (${item.CountryName})`}</strong>
-                                                : `${item.PlaceName} (${item.CountryName})`
-                                        }
-                                    </label>
-                                </StyledSpanNoWrap>)
-                            }
-                        </div>
+                    toPlaces.length !== 0 && <StyledDL>
+                        <StyledDT>All airports for:</StyledDT>
+                        <StyledDD>{toPlaces[0].PlaceName} ({toPlaces[0].CountryName})</StyledDD>
+                    </StyledDL>
                 }
             </Row>
-            <Row>
+            <InputsHolder>
                 <TextField label="Market Country" type="text" value={country} onChange={(e) => setCountry(e.target.value)} />
-            </Row>
-            <Row>
-                <TextField label="Currency" type="text" value={currency} onChange={(e) => setCurrency(e.target.value)} />
-            </Row>
-            <Row>
+                <FormControl>
+                    <InputLabel shrink>
+                        Currency
+                    </InputLabel>
+                    <Select
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value)}
+                    >
+                        <MenuItem value="EUR">EUR</MenuItem>
+                        <MenuItem value="USD">USD</MenuItem>
+                        <MenuItem value="UAH">UAH</MenuItem>
+                        <MenuItem value="RUB">RUB</MenuItem>
+                    </Select>
+                </FormControl>
                 <TextField label="Lang" disabled type="text" value={lang} onChange={(e) => setLang(e.target.value)} />
-            </Row>
-        </div>
+            </InputsHolder>
+        </StyledForm>
         <Actions>
             <Button onClick={onClear} variant="contained" color="secondary">
                 Clear
@@ -150,5 +154,5 @@ export const Form = ({ getFlightData, onClear }) => {
                 Get data
             </Button>
         </Actions>
-    </form>
+    </>
 }

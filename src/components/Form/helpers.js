@@ -13,7 +13,7 @@ export const findCountry = async (countryName, url) => {
             "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
             "useQueryString": true
         },
-    }).then(data => data.json()).then(({Places}) => Places).catch(() => {
+    }).then(data => data.json()).then(({ Places }) => Places).catch(() => {
         alert("No such country");
         return [];
     });
