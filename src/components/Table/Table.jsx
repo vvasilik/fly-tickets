@@ -8,8 +8,9 @@ import Paper from '@material-ui/core/Paper';
 import Row from "../Row";
 
 export const Table = ({ flightData }) => {
+    const { Carriers, Currencies, Quotes, Places } = flightData;
 
-    return (<TableContainer component={Paper}>
+    return Carriers ? (<TableContainer component={Paper}>
         <MuiTable aria-label="simple table">
             <TableHead>
                 <TableRow>
@@ -19,22 +20,17 @@ export const Table = ({ flightData }) => {
             </TableHead>
             <TableBody>
                 {
-                    flightData.map(itemData => {
-                        const { Carriers, Currencies, Quotes, Places } = itemData;
-                
-                        return Carriers &&
-                            Carriers.map(item =>
-                                <Row
-                                    key={item.CarrierId}
-                                    currencies={Currencies}
-                                    carrier={item}
-                                    quotes={Quotes}
-                                    places={Places}
-                                />
-                            )
-                    })
+                    Carriers.map(item =>
+                        <Row
+                            key={item.CarrierId}
+                            currencies={Currencies}
+                            carrier={item}
+                            quotes={Quotes}
+                            places={Places}
+                        />
+                    )
                 }
             </TableBody>
         </MuiTable>
-    </TableContainer>)
+    </TableContainer>) : null
 }
