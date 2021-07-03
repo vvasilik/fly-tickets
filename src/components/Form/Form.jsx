@@ -22,10 +22,10 @@ const Divider = styled.div`
 const FormElement = styled.div`
     width: calc(50% - 24px);
     flex: 0 0 calc(50% - 24px);
-`;
 
-const Currency = styled(FormControl)`
-    width: 100%;
+    & > * {
+        width: 100%;
+    }
 `;
 
 const Row = styled.div`
@@ -82,7 +82,7 @@ export const Form = ({ getFlightData }) => {
             </Row>
             <Row>
                 <FormElement>
-                    <Currency>
+                    <FormControl>
                         <InputLabel shrink>
                             Currency
                         </InputLabel>
@@ -95,7 +95,7 @@ export const Form = ({ getFlightData }) => {
                             <MenuItem value="USD">USD</MenuItem>
                             <MenuItem value="UAH">UAH</MenuItem>
                         </Select>
-                    </Currency>
+                    </FormControl>
                 </FormElement>
                 <Button size="large" onClick={onSubmit} variant="contained" color="primary">
                     Find
