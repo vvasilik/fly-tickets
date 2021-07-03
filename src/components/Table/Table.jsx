@@ -25,7 +25,7 @@ export const Table = ({ departureFlightData, arriveFlightData }) => {
     const departureDate = departureFlightData?.Quotes?.[0]?.OutboundLeg?.DepartureDate?.slice(0, 10);
     const arriveDate = arriveFlightData?.Quotes?.[0]?.OutboundLeg?.DepartureDate?.slice(0, 10);
 
-    return <>
+    return departureFlightData.Carriers && arriveFlightData.Carriers ? <>
         <Heading>Departure {departureDate && <DateText>({departureDate})</DateText>}</Heading>
         <StyledTableContainer component={Paper}>
             <MuiTable aria-label="simple table">
@@ -37,7 +37,7 @@ export const Table = ({ departureFlightData, arriveFlightData }) => {
                 </TableHead>
                 <TableBody>
                     {
-                        departureFlightData.Carriers && departureFlightData.Carriers.map(item =>
+                        departureFlightData.Carriers.map(item =>
                             <Row
                                 key={item.CarrierId}
                                 currencies={departureFlightData.Currencies}
@@ -61,7 +61,7 @@ export const Table = ({ departureFlightData, arriveFlightData }) => {
                 </TableHead>
                 <TableBody>
                     {
-                        arriveFlightData.Carriers && arriveFlightData.Carriers.map(item =>
+                        arriveFlightData.Carriers.map(item =>
                             <Row
                                 key={item.CarrierId}
                                 currencies={arriveFlightData.Currencies}
@@ -74,5 +74,5 @@ export const Table = ({ departureFlightData, arriveFlightData }) => {
                 </TableBody>
             </MuiTable>
         </StyledTableContainer>
-    </>
+    </> : null
 }
