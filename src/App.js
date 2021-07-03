@@ -11,7 +11,8 @@ const getCountryUrl = (currency) =>
     `https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/${marketCountry}/${currency}/${lang}/?query=`;
 
 const App = () => {
-    const [flightData, setFlightData] = useState({});
+    const [departureFlightData, setDepartureData] = useState({});
+    const [arriveFlightData, setArriveData] = useState({});
 
     const findCountryFrom = async (from, currency) => {
         if (!from || !currency) {
@@ -34,12 +35,12 @@ const App = () => {
     }
 
     const getFlightData = async (options) => {
-        const { departureDate, from, to, currency } = options;
+        const { departureDate, arriveDate, from, to, currency } = options;
 
         const fromCountry = await findCountryFrom(from, currency);
         const toCountry = await findCountryTo(to, currency);
 
-        if (!departureDate || !fromCountry || !toCountry || !currency) {
+        if (!departureDate || !arriveDate || !fromCountry || !toCountry || !currency) {
             return;
         }
 
@@ -50,13 +51,22 @@ const App = () => {
                 "useQueryString": true
             },
         }).then(data => data.json()).then(data =>
-            setFlightData({...data, Places: { from: fromCountry.PlaceId, to: toCountry.PlaceId }}));
+            setDepartureData({...data, Places: { from: fromCountry.PlaceId, to: toCountry.PlaceId }}));
+
+        fetch(`https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/${marketCountry}/${currency}/${lang}/${toCountry?.PlaceId}/${fromCountry?.PlaceId}/${arriveDate}`, {
+            headers: {
+                "x-rapidapi-key": "ab45838c7cmsh9ac1edb62d199a4p1e3ca7jsnc9b68cdbfc9f",
+                "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
+                "useQueryString": true
+            },
+        }).then(data => data.json()).then(data =>
+            setArriveData({...data, Places: { from: toCountry.PlaceId, to: fromCountry.PlaceId }}));
     };
 
     return (
         <div className="app">
             <Form getFlightData={getFlightData} />
-            <Table flightData={flightData}/>
+            <Table departureFlightData={departureFlightData} arriveFlightData={arriveFlightData}/>
         </div>
     );
 }
